@@ -28,6 +28,95 @@ private:
 			vClientData[3], vClientData[4], vClientData[5], stod(vClientData[6]));
 	}
 
+	static string _ConverClientObjectToLine(clsBankClient Client, string Seperator = "#//#")
+	{
+
+		string stClientRecord = "";
+		stClientRecord += Client.FirstName + Seperator;
+		stClientRecord += Client.LastName + Seperator;
+		stClientRecord += Client.Email + Seperator;
+		stClientRecord += Client.Phone + Seperator;
+		stClientRecord += Client.AccountNumber() + Seperator;
+		stClientRecord += Client.PinCode + Seperator;
+		stClientRecord += to_string(Client.AccountBalance);
+
+		return stClientRecord;
+
+	}
+
+	static  vector <clsBankClient> _LoadClientsDataFromFile()
+	{
+
+		vector <clsBankClient> vClients;
+
+		fstream MyFile;
+		MyFile.open("Clients.txt", ios::in);//read Mode
+
+		if (MyFile.is_open())
+		{
+
+			string Line;
+
+
+			while (getline(MyFile, Line))
+			{
+
+				clsBankClient Client = _ConvertLinetoClientObject(Line);
+
+				vClients.push_back(Client);
+			}
+
+			MyFile.close();
+
+		}
+
+		return vClients;
+
+	}
+
+	static void _SaveCleintsDataToFile(vector <clsBankClient> vClients)
+	{
+
+		fstream MyFile;
+		MyFile.open("Clients.txt", ios::out);//overwrite
+
+		string DataLine;
+
+		if (MyFile.is_open())
+		{
+
+			for (clsBankClient C : vClients)
+			{
+				DataLine = _ConverClientObjectToLine(C);
+				MyFile << DataLine << endl;
+
+			}
+
+			MyFile.close();
+
+		}
+
+	}
+
+	void _Update()
+	{
+		vector <clsBankClient> _vClients;
+		_vClients = _LoadClientsDataFromFile();
+
+		for (clsBankClient& C : _vClients)
+		{
+			if (C.AccountNumber() == AccountNumber())
+			{
+				C = *this;
+				break;
+			}
+
+		}
+
+		_SaveCleintsDataToFile(_vClients);
+
+	}
+
 	static clsBankClient _GetEmptyClientObject()
 	{
 		return clsBankClient(enMode::EmptyMode, "", "", "", "", "", "", 0);
@@ -59,7 +148,7 @@ public:
 	//Property Set
 	void SetPinCode(string PinCode)
 	{
-		_PinCode = Email;
+		_PinCode = PinCode;
 	}
 
 	//Property Get
@@ -153,6 +242,31 @@ public:
 
 		return _GetEmptyClientObject();
 	}
+
+	enum enSaveResults { svFaildEmptyObject = 0, svSucceeded = 1 };
+
+	enSaveResults Save()
+	{
+
+		switch (_Mode)
+		{
+		case enMode::EmptyMode:
+		{
+
+			return enSaveResults::svFaildEmptyObject;
+		}
+
+		case enMode::UpdateMode:
+		{
+
+			_Update();
+
+			return enSaveResults::svSucceeded;
+
+			break;
+		}
+	}
+}
 
 	static bool IsClientExist(string AccountNumber)
 	{
