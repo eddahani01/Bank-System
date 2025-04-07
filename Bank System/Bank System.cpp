@@ -240,7 +240,7 @@ void ShowTotalBalances()
 int main()
 {
 
-    clsMainScreen::ShowMainMenue();
+    clsMainScreen::ShowMainMenu();
     //ShowTotalBalances();
     //ShowClientsList();
     //DeleteClient();
