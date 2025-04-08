@@ -7,6 +7,7 @@
 #include <fstream>
 
 using namespace std;
+
 class clsBankClient : public clsPerson
 {
 private:
@@ -202,6 +203,7 @@ public:
 	}
 	__declspec(property(get = GetAccountBalance, put = SetAccountBalance)) float AccountBalance;
 
+	/* No UI Related code Inside Object.
 	void Print()
 	{
 		cout << "\nClient Card:";
@@ -216,7 +218,7 @@ public:
 		cout << "\nBalance     : " << _AccountBalance;
 		cout << "\n___________________\n";
 
-	}
+	}*/
 
 	static clsBankClient Find(string AccountNumber)
 	{
