@@ -278,7 +278,6 @@ public:
 
 	enum enSaveResults { svFaildEmptyObject = 0, svSucceeded = 1, svFaildAccountNumberExists = 2 };
 
-
 	enSaveResults Save()
 	{
 
